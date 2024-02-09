@@ -88,23 +88,32 @@ $query_run = mysqli_query($conn, $query);
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
-    $("#search_text").keyup(function(){
-        var search = $(this).val();
-        $.ajax({
-           url:'action.php',
-           method:'post',
-           data:{query:search}, // Send the search query to action.php
-           success:function(response){
-            $("#table-data tbody").html(response); // Update only table body with search results
-           }
-        });
+    $("#search_text").keyup(function(event){
+        event.preventDefault();
+        var action = 'searchRecord';
+        var search = $('#search_text').val();
+        if(search != ''){
+            $.ajax({
+                url: "action.php",
+                method: 'POST',
+                data: {action:action, search:search},
+                success: function(data){
+                    $("#table-data tbody").html(data); // Update table with search results
+                }
+            });
+        } else {
+            $.ajax({
+                url: "action.php",
+                method: 'POST',
+                data: {action:action},
+                success: function(data){
+                    $("#table-data tbody").html(data); // Reset table if search field is empty
+                }
+            });
+        }
+        
     });
-  });
+   });
 </script>
 </body>
 </html>
-
-<?php
-
-$conn->close();
-?>

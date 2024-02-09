@@ -1,50 +1,38 @@
 <?php 
 include 'config.php';
-$output='';
 
-if(isset($_POST['query'])){
-    $search=$_POST['query'];
-    $stmt=$conn->prepare("SELECT * FROM my_table WHERE firstname LIKE CONCAT('%', ?, '%') OR lastname LIKE CONCAT('%', ?, '%')");
-    $stmt->bind_param("ss", $search, $search);
-}
-else{
-    $stmt=$conn->prepare("SELECT * FROM my_table");
+if(isset($_POST['action']) && $_POST['action'] == 'searchRecord'){
+    $search = $_POST['search'];
+    $query = "SELECT * FROM my_table WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%'";
+} else {
+    $query = "SELECT * FROM my_table";
 }
 
-$stmt->execute();
-$result=$stmt->get_result();
+$query_run = mysqli_query($conn, $query);
 
-if($result->num_rows>0){
-    $output = "<thead>
-                <tr>
-                    <th>#</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Email</th>
-                    <th>Phonenumber</th>
-                    <th>Address</th>
-                </tr>
-            </thead>
-            <tbody>";
+$output = '';
 
-    while($row=$result->fetch_assoc()){
-        $output .= "<tr>
-                        <td>".$row['id']."</td>
-                        <td>".$row['firstname']."</td>
-                        <td>".$row['lastname']."</td>
-                        <td>".$row['email']."</td>
-                        <td>".$row['phonenumber']."</td>
-                        <td>".$row['address']."</td>
-                    </tr>";
+if ($query_run) {
+    $num = mysqli_num_rows($query_run);
+    if ($num > 0){
+        while($row = mysqli_fetch_array($query_run)){
+            $output .= "<tr>
+                            <td>".$row['id']."</td>
+                            <td>".$row['firstname']."</td>
+                            <td>".$row['lastname']."</td>
+                            <td>".$row['email']."</td>
+                            <td>".$row['phonenumber']."</td>
+                            <td>".$row['address']."</td>
+                        </tr>";
+        }
+    } else {
+        $output .= "<tr><td colspan='6'>No Records Found!</td></tr>";
     }
-
-    $output .= "</tbody>";
-    echo $output;
-}
-else{
-    echo "<h3>No Records Found!</h3>";
+} else {
+    $output .= "<tr><td colspan='6'>Error: Unable to execute query</td></tr>";
 }
 
-$stmt->close();
-$conn->close();
+echo $output;
+
+mysqli_close($conn);
 ?>
