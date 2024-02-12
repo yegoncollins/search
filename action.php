@@ -1,8 +1,8 @@
 <?php 
 include 'config.php';
 
-if(isset($_POST['action']) && $_POST['action'] == 'searchRecord'){
-    $search = $_POST['search'];
+if(isset($_GET['query'])){ 
+    $search = $_GET['query']; 
     $query = "SELECT * FROM my_table WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%'";
 } else {
     $query = "SELECT * FROM my_table";

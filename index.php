@@ -22,8 +22,7 @@ $query_run = mysqli_query($conn, $query);
     <title>Mintel</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-secondary">
@@ -45,7 +44,7 @@ $query_run = mysqli_query($conn, $query);
      <div class="col-md-10 bg-light mt2-rounded pb-3">
        <div class="form-line">
         <label for="search" class="font-weight-bold lead text-dark">Search</label> &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="text" name="search" id="search_text" class="form-control form-control-lg rounded border-primary" placeholder="Search...">
+        <input type="text" name="query" id="search_text" class="form-control form-control-lg rounded border-primary" placeholder="Search...">
        </div>
           
           <table class="table table-hover table-light table-striped" id="table-data">
@@ -90,30 +89,21 @@ $query_run = mysqli_query($conn, $query);
   $(document).ready(function(){
     $("#search_text").keyup(function(event){
         event.preventDefault();
-        var action = 'searchRecord';
-        var search = $('#search_text').val();
-        if(search != ''){
-            $.ajax({
-                url: "action.php",
-                method: 'POST',
-                data: {action:action, search:search},
-                success: function(data){
-                    $("#table-data tbody").html(data); // Update table with search results
-                }
-            });
-        } else {
-            $.ajax({
-                url: "action.php",
-                method: 'POST',
-                data: {action:action},
-                success: function(data){
-                    $("#table-data tbody").html(data); // Reset table if search field is empty
-                }
-            });
-        }
-        
+        // Capture the value of the search input field
+        var search = $(this).val(); 
+        $.ajax({
+            url: "action.php",
+
+            // use GET not POST
+            method: 'GET', 
+            data: {query: search}, 
+            success: function(data){
+                // Update table with search results
+                $("#table-data tbody").html(data); 
+            }
+        });
     });
-   });
+  });
 </script>
 </body>
 </html>
