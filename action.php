@@ -1,21 +1,24 @@
-<?php 
+<?php
 include 'config.php';
 
-if(isset($_GET['query'])){ 
-    $search = $_GET['query']; 
-    $query = "SELECT * FROM my_table WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%'";
+$records_per_page = 10;
+$page_number = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+$offset = ($page_number - 1) * $records_per_page;
+
+$output = '';
+
+if (isset($_GET['query'])) {
+    $search = $_GET['query'];
+    $query = "SELECT * FROM my_table WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' LIMIT $records_per_page OFFSET $offset";
 } else {
-    $query = "SELECT * FROM my_table";
+    $query = "SELECT * FROM my_table LIMIT $offset, $records_per_page";
 }
 
 $query_run = mysqli_query($conn, $query);
 
-$output = '';
-
 if ($query_run) {
-    $num = mysqli_num_rows($query_run);
-    if ($num > 0){
-        while($row = mysqli_fetch_array($query_run)){
+    if (mysqli_num_rows($query_run) > 0) {
+        while ($row = mysqli_fetch_array($query_run)) {
             $output .= "<tr>
                             <td>".$row['id']."</td>
                             <td>".$row['firstname']."</td>

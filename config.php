@@ -1,17 +1,19 @@
 <?php
-$servername = "localhost"; // or your MySQL server address
-$username = "root"; // your MySQL username
-$password = "Yegon#236"; // your MySQL password
-$database = "search_data"; // your MySQL database name
+$servername = "localhost";
+$username = "root";
+$password = "Yegon#236";
+$database = "search_data";
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $database);
+$conn = new mysqli($servername, $username, $password, $database);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
+} else {
+
 }
 
-
-
+// Close connection (not necessary if you plan to execute queries later)
+//$conn->close();
 ?>
