@@ -1,7 +1,7 @@
 <?php
 include 'config.php';
 
-$records_per_page = 10;
+$records_per_page = 20;
 $page_number = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page_number - 1) * $records_per_page;
 
@@ -11,7 +11,7 @@ if (isset($_GET['query'])) {
     $search = $_GET['query'];
     $query = "SELECT * FROM my_table WHERE firstname LIKE '%$search%' OR lastname LIKE '%$search%' LIMIT $records_per_page OFFSET $offset";
 } else {
-    $query = "SELECT * FROM my_table LIMIT $offset, $records_per_page";
+    $query = "SELECT * FROM my_table LIMIT $records_per_page OFFSET $offset";
 }
 
 $query_run = mysqli_query($conn, $query);
@@ -35,7 +35,11 @@ if ($query_run) {
     $output .= "<tr><td colspan='6'>Error: Unable to execute query</td></tr>";
 }
 
-echo $output;
+echo json_encode([
+    'html' => $output,
+    'page_number' => $page_number
+ 
+]);
 
 mysqli_close($conn);
 ?>
