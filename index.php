@@ -22,6 +22,7 @@ $query .= " LIMIT $records_per_page OFFSET $offset";
 $query_run = mysqli_query($conn, $query);
 
 ?>
+<?php require "config.php" ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +53,9 @@ $query_run = mysqli_query($conn, $query);
             <div class="col-md-10 bg-light mt2-rounded pb-3">
                 <div class="form-line">
                     <label for="search" class="font-weight-bold lead text-dark">Search Results</label> &nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" name="query" id="search_text" class="form-control form-control-lg rounded border-primary" placeholder="Search...">
+                    <input type="text" name="query" id="search_text" class="form-control form-control-lg w-50" placeholder="Search...">
+        
+                    <a href="export.php"><button type="button" class="btn btn-primary">Download Data</button></a>
                 </div>
                 <table class="table table-hover table-light table-striped" id="table-data">
                     <thead>
@@ -169,6 +172,7 @@ $query_run = mysqli_query($conn, $query);
 });
 
     </script>
+    
 </body>
 
 </html>
